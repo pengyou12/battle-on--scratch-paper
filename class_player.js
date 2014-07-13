@@ -5,14 +5,14 @@ function class_player()
 	this.positionMiny = 0;
 	this.positionMaxx = 10;
 	this.positionMaxy = 10;
-	this.moveLength = 100;
+	this.moveLength = 30;
 	this.shoot = function(){
 								if(MouseClick == true)
 								{
 								MouseClick = false;
 								//TO DO:add a bullut
 								}
-							}
+							};
 	this.die = function(positionMinx,positionMiny,positionMaxx,positionMaxy){
 								if(((positionMinx >= this.positionMinx && positionMinx <= this.positionMaxx)||(positionMaxx >= this.positionMinx && positionMaxx <= this.positionMaxx))&&((positionMaxy >= this.positionMiny && positionMaxy <= this.positionMaxy)||(positionMiny >= this.positionMiny && positionMiny <= this.positionMaxy)))
 									{
@@ -20,7 +20,7 @@ function class_player()
 										return true;
 									}
 									else return false;
-							}
+							};
 	this.moveLeft = function(){
 									if( LeftArrow == true)
 									{
@@ -28,7 +28,7 @@ function class_player()
 										this.positionMinx -= this.moveLength;
 										this.positionMaxx -= this.moveLength;
 									}
-							}
+							};
 	this.moveRight = function(){
 									if( RightArrow == true)
 									{
@@ -36,7 +36,7 @@ function class_player()
 										this.positionMinx += this.moveLength;
 										this.positionMaxx += this.moveLength;
 									}
-							}
+							};
 	this.moveUp = function(){
 									if( UpArrow == true)
 									{
@@ -44,19 +44,21 @@ function class_player()
 										this.positionMiny -= this.moveLength;
 										this.positionMaxy -= this.moveLength;
 									}
-							}															
+							};															
 	this.moveDown = function(){
 									if( DownArrow == true)
 									{
 										DownArrow = false;
 										this.positionMiny += this.moveLength;
 										this.positionMaxy += this.moveLength;
-										alert('move');
+										
 									}
-							}	
+									
+							};
 }
-
+var keyboard;
 player = new class_player();
+var LeftArrow,RightArrow,UpArrow,DownArrow;
 
 document.onkeydown = function (e)
 {
@@ -70,28 +72,41 @@ else if(e.which) // Netscape/Firefox/Opera
 	}
 	if(keynum == 37){
 		LeftArrow = true;
+		//player.moveLeft();
 	}
 	else if(keynum == 38){
 		UpArrow = true;
+	//	player.moveUp();
 	}
 	else if(keynum == 39){
 		RightArrow = true;
+	//	player.moveRight();
 	}
 	else if(keynum == 40){
 		DownArrow = true;
+		//player.moveDown();
 	}
 }
 
 //主函数
 //测试函数，画一个能跑的人
-document.onload(){alert(23);}
+window.onload  = function(){
 $('#playBox').append($('<img id = "player1" style="position:absolute;" src = "http://pengyou12.github.io/icon32.png">'));
 $('#player1')[0].style.left = 0 +"px";
 $('#player1')[0].style.top = player.positionMiny + "px"; 
   setInterval(function(){
-  		//player.positionMinx += 10;
-  		player.moveLeft();player.moveRight();
-  		player.moveUp();player.moveDown();
+  		if((LeftArrow && RightArrow)||(UpArrow && DownArrow))//按键冲突
+  		{
+  			LeftArrow = false;RightArrow = false;UpArrow = false; DownArrow = false;
+  		}
+  		else
+  		{
+  			if(LeftArrow) player.moveLeft();
+  			else if(RightArrow) player.moveRight();
+  			else if(UpArrow) player.moveUp();
+  			else if(DownArrow) player.moveDown();
+  		} 
   		$('#player1')[0].style.left = player.positionMinx + "px";
   		$('#player1')[0].style.top = player.positionMiny + "px";
-  	},100);
+  	},50);
+}
