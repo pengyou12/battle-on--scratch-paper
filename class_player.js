@@ -1,6 +1,9 @@
 function class_player()
 {
 	//"use strict";
+	playMap = $("#playBox");
+	MapWidth = playMap.css("width");
+	MapHeight = playMap.css("height");
 	this.positionMinx = Math.random() * 1000;
 	this.positionMiny = Math.random() * 800;
 	this.positionMaxx = this.positionMinx + 10;
@@ -60,13 +63,12 @@ function class_player()
 
 
 var keyboard;
-player = new class_player();
 var LeftArrow,RightArrow,UpArrow,DownArrow;
 var playerList = new Array([1]);
 var enemyList = new Array([1]);
 var bulletList = new Array([1]);
-var TotalWidth = 800;
-var TotalHeight = 800;
+var MapWidth = 800;
+var MapHeight = 800;
 
 document.onkeydown = function (e)
 {
@@ -122,7 +124,7 @@ function Game(){
 			{
 				if( elem != 0)
 				{
-					if (playerList[elem].positionMiny > TotalHeight ||  playerList[elem].positionMaxx < 0 || playerList[elem].positionMinx > TotalWidth || playerList[elem].positionMaxy < 0 )
+					if (playerList[elem].positionMiny > MapHeight ||  playerList[elem].positionMaxx < 0 || playerList[elem].positionMinx > MapWidth || playerList[elem].positionMaxy < 0 )
 				{
 					//remove 
 					$("#player"+elem).remove();
