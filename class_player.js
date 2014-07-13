@@ -25,38 +25,73 @@ function class_player()
 									if( LeftArrow == true)
 									{
 										LeftArrow = false;
-										this.positionMinx -= moveLength;
-										this.positionMaxx -= moveLength;
+										this.positionMinx -= this.moveLength;
+										this.positionMaxx -= this.moveLength;
 									}
 							}
 	this.moveRight = function(){
 									if( RightArrow == true)
 									{
 										RightArrow = false;
-										this.positionMinx += moveLength;
-										this.positionMaxx += moveLength;
+										this.positionMinx += this.moveLength;
+										this.positionMaxx += this.moveLength;
 									}
 							}
 	this.moveUp = function(){
 									if( UpArrow == true)
 									{
 										UpArrow = false;
-										this.positionMiny += moveLength;
-										this.positionMaxy += moveLength;
+										this.positionMiny -= this.moveLength;
+										this.positionMaxy -= this.moveLength;
 									}
 							}															
 	this.moveDown = function(){
 									if( DownArrow == true)
 									{
 										DownArrow = false;
-										this.positionMiny -= moveLength;
-										this.positionMaxy -= moveLength;
+										this.positionMiny += this.moveLength;
+										this.positionMaxy += this.moveLength;
+										alert('move');
 									}
 							}	
-
 }
 
+player = new class_player();
 
+document.onkeydown = function (e)
+{
+	if(window.event) // IE
+	{
+	keynum = e.keyCode
+	}
+else if(e.which) // Netscape/Firefox/Opera
+	{
+	keynum = e.which
+	}
+	if(keynum == 37){
+		LeftArrow = true;
+	}
+	else if(keynum == 38){
+		UpArrow = true;
+	}
+	else if(keynum == 39){
+		RightArrow = true;
+	}
+	else if(keynum == 40){
+		DownArrow = true;
+	}
+}
+
+//主函数
+//测试函数，画一个能跑的人
+document.onload(){alert(23);}
+$('#playBox').append($('<img id = "player1" style="position:absolute;" src = "http://pengyou12.github.io/icon32.png">'));
+$('#player1')[0].style.left = 0 +"px";
+$('#player1')[0].style.top = player.positionMiny + "px"; 
   setInterval(function(){
-  		alert(233);
-  	},1000);
+  		//player.positionMinx += 10;
+  		player.moveLeft();player.moveRight();
+  		player.moveUp();player.moveDown();
+  		$('#player1')[0].style.left = player.positionMinx + "px";
+  		$('#player1')[0].style.top = player.positionMiny + "px";
+  	},100);
