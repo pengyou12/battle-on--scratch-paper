@@ -1,0 +1,67 @@
+body, html{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: none;
+	display: block;
+	overflow: scroll;
+}
+
+#mainWrapper{
+	height:100%;
+	width:100%;
+	position:absolute;
+	margin: 0;
+	background-color: #222222;
+}
+
+#playBox{
+	position:absolute;
+	top:50px;
+	left:50px;
+	height:550px;
+	width:1200px;
+	background-color: #fff;
+}
+
+#bulletBox{
+	height:100%;
+	width:100%;
+}
+
+.bullet{
+	position:absolute;
+	padding:1px;
+	border: solid;
+	overflow: hidden;
+}
+
+#enemyBox{
+	height:100%;
+	width:100%;
+}
+
+.enemy{
+	position:absolute;
+	padding:3px;
+	border:none;
+	background-color: red;
+	overflow: hidden;
+}
+
+
+#target{
+	position: absolute;
+	padding:3px;
+	border: none;
+	overflow: hidden;
+	top:300;
+	left:300;
+	border:solid;
+}
+
+#test{
+	height:100%;
+	width:100%
+
+}
