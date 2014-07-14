@@ -147,8 +147,29 @@ function class_player()
 }
 function mouseMove(ev)
 {
+	var angle;
 	mouseposX = ev.pageX-50;
    	mouseposY = ev.pageY-50; 
+   	var tanangle = (player.positionMiny - mouseposY) / (player.positionMinx - mouseposX);
+   	if(mouseposX < player.positionMinx ){//左边模式
+   						angle = Math.atan(tanangle);
+   						if(LeftRightModel == 1){
+   						LeftRightModel = 0;
+  						LeftImgcount = 0;
+  						RightImgcount = 0;
+  						$("#player0")[0].src = "old_guy_frame4.png";
+  						}
+  					}
+  	else if(mouseposX > player.positionMinx ){
+  		angle = Math.atan(tanangle);
+  		if(LeftRightModel == 0){
+  		RightImgcount = 0;
+  		LeftRightModel = 1;
+  		$("#player0")[0].src = "old_guy.png";
+  		}
+  	}
+  		angle = angle * 180 / 3.14159;
+  		$("#player0").css( 'transform', 'rotate('+angle+'deg)' );
 }
 //判断鼠标是否被按下
 function MouseDown(ev){
@@ -202,6 +223,7 @@ function Play(){
 	BulletTotal = 0; //子弹总数
 	EnemyArr = [];  //敌人数组
 	EnemyTotal = 0; //敌人总数
+	LeftRightModel = 0;//0表示是左边模式，1是右边模式
 	intervalTime = 200; //间隔时间
 	LeftImgcount = 0;
 	RightImgcount = 0;
@@ -251,7 +273,7 @@ function Play(){
 	var bulletGenerate = function(sx,sy,dx,dy){
 		var b = new class_Bullet(sx,sy,dx,dy, BulletTotal);
 		BulletArr.push(b);
-		temp = "<img style='position:absolute;' src = 'http://i2.sinaimg.cn/dy/photo/2013/images/0809/photo_zxa_0809_dot.gif'class='bullet' id='bullet"+BulletTotal+"'></div>";
+		temp = "<img style='position:absolute;' src = 'old_guy_bullet.png'class='bullet' id='bullet"+BulletTotal+"'></div>";
 		$('#bulletBox').append(temp);
 		$('#bullet'+BulletTotal)[0].style.left = sx+"px";
 		$('#bullet'+BulletTotal)[0].style.top = sy+"px";
@@ -361,38 +383,40 @@ function Play(){
   				if(LeftArrow || RightArrow || UpArrow || DownArrow)
   				{
   					if(mouseposX < player.positionMinx){//左边模式
+  						LeftRightModel = 0;
   						LeftImgcount = (LeftImgcount+1) % 3;
   						RightImgcount = 0;
   						if(LeftImgcount == 0)
   						{
-  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame4.png";
+  							$("#player0")[0].src = "old_guy_frame4.png";
   						}
   						else if(LeftImgcount == 1)
   						{
-  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame5.png";
+  							$("#player0")[0].src = "old_guy_frame5.png";
   						}
   						else{
-  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame6.png";
+  							$("#player0")[0].src = "old_guy_frame6.png";
   						}
   					}
   					else{//右边模式
   						LeftImgcount = 0;
+  						LeftRightModel = 1;
   						RightImgcount = (RightImgcount +1) % 4;
   						if(RightImgcount == 0)
   						{
-  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy.png";
+  							$("#player0")[0].src = "old_guy.png";
   						}
   						else if(RightImgcount == 1)
   						{
-  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame1.png";
+  							$("#player0")[0].src = "old_guy_frame1.png";
   						}
   						else if(RightImgcount == 2)
   						{
-  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame2.png";
+  							$("#player0")[0].src = "old_guy_frame2.png";
   						}
   						else if(RightImgcount == 3)
   						{
-  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame3.png";
+  							$("#player0")[0].src = "old_guy_frame3.png";
   						}
   					}
   				}
