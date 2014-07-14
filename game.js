@@ -93,7 +93,7 @@ function class_player()
 	this.positionMiny = Math.random() * parseInt(MapHeight);
 	this.positionMaxx = this.positionMinx + 10;
 	this.positionMaxy = this.positionMiny + 10;
-	this.moveLength = 30;
+	this.moveLength = 4;
 	this.harm = 1;//当前子弹的伤害
 	this.shoot = function(){
 								if(MouseClick == true)
@@ -147,11 +147,8 @@ function class_player()
 }
 function mouseMove(ev)
 {
-	if(MouseClick)
-	{
-		 mouseposX = ev.pageX-50;
-   		 mouseposY = ev.pageY-50; 
-	}
+	mouseposX = ev.pageX-50;
+   	mouseposY = ev.pageY-50; 
 }
 //判断鼠标是否被按下
 function MouseDown(ev){
@@ -206,6 +203,8 @@ function Play(){
 	EnemyArr = [];  //敌人数组
 	EnemyTotal = 0; //敌人总数
 	intervalTime = 200; //间隔时间
+	LeftImgcount = 0;
+	RightImgcount = 0;
 	$('#playBox').append($('<div id = "enemyBox"></div>'));
 	$('#playBox').append($('<div id = "bulletBox"></div>'));
 	//设定：
@@ -215,7 +214,7 @@ function Play(){
 		//产生当前的player
 		player = new class_player();
 		PlayerArr.push(player);
-		$('#playBox').append($('<img id = "player'+(PlayerTotal)+'" style="position:absolute;" src = "http://pengyou12.github.io/icon32.png">'));
+		$('#playBox').append($('<img id = "player'+(PlayerTotal)+'" style="position:absolute;" src = "http://pengyou12.github.io/old_guy.png">'));
 		$('#player'+(PlayerTotal))[0].style.left = PlayerArr[PlayerTotal].positionMinx + "px";
   		$('#player'+(PlayerTotal))[0].style.top = PlayerArr[PlayerTotal].positionMiny + "px";
   		PlayerTotal++;
@@ -289,7 +288,7 @@ function Play(){
 		{
 			for(var elem in EnemyArr)
 			{
-				if(PlayerArr[ele].positionMaxx < EnemyArr[elem].PosX - enemyWidth || PlayerArr[ele].positionMaxy < EnemyArr[elem].PosY - enemyWidth || EnemyArr[elem].PosX + enemyWidth < PlayerArr[ele].positionMinx || EnemyArr[elem].PosY + enemyWidth < PlayerArr[elem].positionMiny){
+				if(PlayerArr[ele].positionMaxx < EnemyArr[elem].PosX - enemyWidth || PlayerArr[ele].positionMaxy < EnemyArr[elem].PosY - enemyWidth || EnemyArr[elem].PosX + enemyWidth < PlayerArr[ele].positionMinx || EnemyArr[elem].PosY + enemyWidth < PlayerArr[ele].positionMiny){
 					;
 				}
 				else{
@@ -359,10 +358,49 @@ function Play(){
   			}
   			else
   			{
+  				if(LeftArrow || RightArrow || UpArrow || DownArrow)
+  				{
+  					if(mouseposX < player.positionMinx){//左边模式
+  						LeftImgcount = (LeftImgcount+1) % 3;
+  						RightImgcount = 0;
+  						if(LeftImgcount == 0)
+  						{
+  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame4.png";
+  						}
+  						else if(LeftImgcount == 1)
+  						{
+  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame5.png";
+  						}
+  						else{
+  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame6.png";
+  						}
+  					}
+  					else{//右边模式
+  						LeftImgcount = 0;
+  						RightImgcount = (RightImgcount +1) % 4;
+  						if(RightImgcount == 0)
+  						{
+  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy.png";
+  						}
+  						else if(RightImgcount == 1)
+  						{
+  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame1.png";
+  						}
+  						else if(RightImgcount == 2)
+  						{
+  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame2.png";
+  						}
+  						else if(RightImgcount == 3)
+  						{
+  							$("#player0")[0].src = "http://pengyou12.github.io/old_guy_frame3.png";
+  						}
+  					}
+  				}
   				if(LeftArrow) player.moveLeft();
 	  			if(RightArrow) player.moveRight();
 	  			if(UpArrow) player.moveUp();
   				if(DownArrow) player.moveDown();
+  				//换图片，实现过渡效果
   			} 
   			 	$('#player0')[0].style.left = player.positionMinx + "px";
   				$('#player0')[0].style.top = player.positionMiny + "px";
