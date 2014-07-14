@@ -60,7 +60,7 @@ function class_Bullet(sx,sy,dx,dy,id){
 	this.PosX = sx;
 	this.PosY = sy;
 	this.Id = id;
-	this.moveLength = 10;
+	this.moveLength = 2;
 	this.getPosX = function(){
 		return this.PosX;
 	}
@@ -72,8 +72,9 @@ function class_Bullet(sx,sy,dx,dy,id){
 		this.PosY = y;
 	}
 	this.isOut = function(){
-		if (this.PosX < 0 || this.PosX > parseInt(MapWidth) || this.PosY < 0 || this.PosY > parseInt(MapHeight))
+		if (this.PosX < 0 || this.PosX > parseInt(MapWidth) || this.PosY < 0 || this.PosY > parseInt(MapHeight)){
 			return true;
+		}
 		else
 			return false;
 	}
@@ -93,6 +94,7 @@ function class_player()
 	this.positionMaxx = this.positionMinx + 10;
 	this.positionMaxy = this.positionMiny + 10;
 	this.moveLength = 30;
+	this.harm = 1;//当前子弹的伤害
 	this.shoot = function(){
 								if(MouseClick == true)
 								{
@@ -143,11 +145,19 @@ function class_player()
 									
 							};
 }
+function mouseMove(ev)
+{
+	if(MouseClick)
+	{
+		 mouseposX = ev.pageX-50;
+   		 mouseposY = ev.pageY-50; 
+	}
+}
 //判断鼠标是否被按下
 function MouseDown(ev){
 	//var e = ev || window.event;             
-    mouseposX = ev.clientX;
-    mouseposY = ev.clientY; 
+    mouseposX = ev.pageX-50;
+    mouseposY = ev.pageY-50; 
 	MouseClick = true;
 }
 function MouseUp(){
@@ -252,8 +262,62 @@ function Play(){
 	//事件检测:
 		//每0.2秒-检测撞击：player与enemy（game over） bullet与enemey（生命值减少-检测是否死亡）
 	var checkDeath = function(){
+		var enemyWidth = 15;//怪中心到边上的距离
+		var playerWidth = 10;
+		//删除被子弹打中的怪物
+		for(var elem in BulletArr)
+		{
+			for(var ele in EnemyArr)
+			{
+				if(EnemyArr[ele].PosX + enemyWidth > BulletArr[elem].PosX && EnemyArr[ele].PosY + enemyWidth > BulletArr[elem].PosY && EnemyArr[ele].PosY - enemyWidth < BulletArr[elem].PosY && EnemyArr[ele].PosX - enemyWidth < BulletArr[elem].PosX){
+					//remove
+					// EnemyArr[ele].life -= player.harm;
+					$("#bullet"+elem).remove();
+					delete BulletArr[elem];
+					EnemyArr[ele].life -= 50;
+					if(EnemyArr[ele].life <= 0)
+					{
+						$("#enemy"+ele).remove();
+					delete EnemyArr[ele];
+					}
+				}	
+			}
+
+		}
+		//删除被怪物撞到的人
+		for(var ele in PlayerArr)
+		{
+			for(var elem in EnemyArr)
+			{
+				if(PlayerArr[ele].positionMaxx < EnemyArr[elem].PosX - enemyWidth || PlayerArr[ele].positionMaxy < EnemyArr[elem].PosY - enemyWidth || EnemyArr[elem].PosX + enemyWidth < PlayerArr[ele].positionMinx || EnemyArr[elem].PosY + enemyWidth < PlayerArr[elem].positionMiny){
+					;
+				}
+				else{
+					$("#player"+ele).remove();
+					delete PlayerArr[ele];
+					}
+			}
+		}
+		// 	//删除被怪物子弹打到的人
+		// for(var elem in BulletArr2)
+		// {
+
+		// 	for(var ele in PlayerArr)
+		// 	{
+		// 		if(PlayerArr[ele].positionMinx + playerWidth > BulletArr2[elem].positionMinx && PlayerArr[ele].positionMiny + playerWidth > BulletArr2[elem].positionMiny && PlayerArr[ele].positionMiny - playerWidth < BulletArr2[elem].positionMiny && PlayerArr[ele].positionMinx - playerWidth < BulletArr2[elem].positionMinx){
+		// 			//remove
+		// 			// PlayerArr[ele].life -= player.harm;
+		// 			$("#bullet_enemy"+elem).remove();
+		// 			delete BulletArr2[elem];
+		// 			$("#player"+ele).remove();
+		// 			delete PlayerArr[ele];
+		// 			}
+		// 	}	
+		// }
+	}	
 		
-	}
+	
+	var RecheckDeath = setInterval(checkDeath,20);
 		//每0.2秒-检测出界：player（禁止出界） enemy（消除） bullet（消除）
 		var checkRange = function(){
 			//监测人物出界
@@ -312,12 +376,15 @@ function Play(){
 				// cursor.PosY = mouseposY;
 				var DX = mouseposX - player.positionMinx;
 				var DY = mouseposY - player.positionMiny;
-				DX = DX /Math.sqrt((DX*DX)+(DY*DY));
-				DY = DY /Math.sqrt((DX*DX)+(DY*DY));
+				var dx1,dy1;
+				dx1 = DX /Math.sqrt((DX*DX)+(DY*DY));
+				dy1 = DY /Math.sqrt((DX*DX)+(DY*DY));
+				DX = dx1;
+				DY = dy1;
 				bulletGenerate(player.positionMinx, player.positionMiny, DX, DY);
 			}
 		}
-		var ReCheckMouse = setInterval(CheckMouse,00);
+		var ReCheckMouse = setInterval(CheckMouse,200);
 	//事件进行：
 		//每0.2秒-子弹直线运动
 		var bulletMove = function(){
@@ -326,10 +393,12 @@ function Play(){
 				var newX = cursor.PosX + cursor.DirectX * cursor.moveLength;
 				var newY = cursor.PosY + cursor.DirectY * cursor.moveLength;
 				BulletArr[i].setPos(newX, newY);
-				$("#bullet"+i).animate({left:""+newX+"px", top:""+newY+"px"}, 10);
+				// $("#bullet"+i).animate({left:""+newX+"px", top:""+newY+"px"}, 10);
+				$("#bullet"+i)[0].style.left = newX + "px";
+				$("#bullet"+i)[0].style.top = newY + "px";
 			}
 		}
-		var ReBulletMove = setInterval(bulletMove, intervalTime);
+		var ReBulletMove = setInterval(bulletMove, intervalTime/15);
 
 		//每0.2秒-enemy（1）（3）直线运动
 		var enemyMoveStraight = function(){
