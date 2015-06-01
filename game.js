@@ -429,7 +429,7 @@ function Play(){
   			 	$('#player0')[0].style.left = player.positionMinx + "px";
   				$('#player0')[0].style.top = player.positionMiny + "px";
 		} 
-		setInterval(CheckKey,2000);
+		setInterval(CheckKey,50);
 		//每0.05秒-检测player发射子弹：鼠标左键按下
 		var CheckMouse = function(){
 			if(MouseClick)
